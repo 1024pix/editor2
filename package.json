@@ -1,13 +1,12 @@
 {
   "name": "pix-lcms",
-  "version": "3.10.0",
+  "version": "3.10.1",
   "description": "Pix Learning Content Management System",
   "main": "index.js",
   "directories": {
     "doc": "docs"
   },
-  "scripts": {
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/1024pix/pix-editor.git"
