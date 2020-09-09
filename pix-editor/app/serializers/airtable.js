@@ -2,12 +2,9 @@ import DS from 'ember-data';
 import { assign } from '@ember/polyfills';
 import { pluralize } from 'ember-inflector';
 
-export default class ApplicationSerializer extends DS.RESTSerializer {
+export default class AirtableSerializer extends DS.RESTSerializer {
 
   payloadKeyFromModelName(modelName) {
-    if (modelName === 'area') {
-      return 'Domaines';
-    }
     return super.payloadKeyFromModelName(modelName);
   }
 
