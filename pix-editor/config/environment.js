@@ -21,7 +21,7 @@ module.exports = function(environment) {
       // Here you can pass flags/options to your application instance
       // when it is created
       version:require('../package.json').version
-    }
+    },
   };
 
   if (environment === 'development') {
@@ -43,6 +43,9 @@ module.exports = function(environment) {
 
     ENV.APP.rootElement = '#ember-testing';
     ENV.APP.autoboot = false;
+
+    ENV.APP.airtableKey = process.env.AIRTABLE_KEY;
+    ENV.APP.configKey = process.env.CONFIG_KEY;
   }
 
   if (environment === 'production') {

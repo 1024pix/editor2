@@ -15,8 +15,8 @@
     "build:production": "ember build -prod",
     "lint:hbs": "ember-template-lint .",
     "lint:js": "eslint --fix .",
-    "start": "ember serve",
-    "test": "ember test"
+    "start": "source .env && ember serve --proxy http://localhost:3002",
+    "test": "source .env && ember test"
   },
   "devDependencies": {
     "@ember/jquery": "^1.1.0",
@@ -63,6 +63,7 @@
     "eslint": "^7.4.0",
     "eslint-plugin-ember": "^7.7.2",
     "eslint-plugin-node": "^11.0.0",
+    "faker": "5.1.0",
     "liquid-fire": "^0.31.0",
     "loader.js": "^4.7.0",
     "qunit-dom": "^1.0.0",
