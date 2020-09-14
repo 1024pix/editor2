@@ -3,7 +3,7 @@ const areaDatasource = require('../datasources/airtable/area-datasource');
 
 async function get() {
   const areaDataObjects = await areaDatasource.list();
-  return areaDataObjects.map((areaDataObject) => {
+  const areas = areaDataObjects.map((areaDataObject) => {
     return new Area({
       id: areaDataObject.id,
       code: areaDataObject.code,
@@ -11,6 +11,7 @@ async function get() {
       competenceIds: areaDataObject.competenceIds,
     });
   });
+  return areas.sort((leftArea, rightArea) => leftArea.code - rightArea.code);
 }
 
 module.exports = {
