@@ -6,13 +6,12 @@ exports.up = (knex) => {
       t.string('id').primary();
       t.string('name');
       t.string('description');
-      t.string('image_url');
-      t.integer('display_order').unsigned();
+      t.string('imageUrl');
+      t.integer('displayOrder').unsigned();
       t.boolean('adaptive');
-      t.boolean('challenge_of_the_week');
+      t.boolean('challengeOfTheWeek');
       t.enu('status', ['draft', 'program_level_3', 'published', 'suggested', 'unpublished', 'validated', 'disabled']);
       t.string('series');
-      t.string('field_17');
     });
 };
   

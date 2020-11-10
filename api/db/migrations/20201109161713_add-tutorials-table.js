@@ -5,8 +5,7 @@ exports.up = (knex) => {
     .createTable(TABLE_NAME, (t) => {
       t.string('id').primary();
       t.string('title');
-      t.string('competence'); // competence ?
-      t.enu('format', ['vidéo', 'slide', 'site', 'game', 'audio', 'pdf', 'image', 'page', 'tool', 'frise', 'slides']);
+      t.enu('format', ['vidéo', 'slide', 'site', 'game', 'audio', 'pdf', 'image', 'page', 'tool', 'timeline']);
       t.string('duration');
       t.string('source');
       t.text('link');
