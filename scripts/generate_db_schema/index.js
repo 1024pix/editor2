@@ -35,3 +35,30 @@ function dropTable(table) {
     .dropTable('${table.name}');
 `
 }
+
+async function main() {
+
+  try {
+    const filePath = process.argv[2];
+
+    const airtableData = require(filePath);
+    const migrationFile = generateDbSchema(airtableData.tables);
+    
+    console.log(migrationFile);
+    process.exit(0);
+  } catch (error) {
+    console.error(error);
+
+    process.exit(1);
+  }
+}
+
+if (require.main === module) {
+  main().then(
+    () => process.exit(0),
+    (err) => {
+      console.error(err);
+      process.exit(1);
+    },
+  );
+}
