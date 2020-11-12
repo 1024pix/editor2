@@ -1,5 +1,7 @@
+const columnParameters = require('./column-parameters');
+
 module.exports = {
-  generateDbSchema
+  generateDbSchema,
 }
 
 function generateDbSchema(tables) {
@@ -17,11 +19,13 @@ ${dropTables}
 }
 
 function createTable(table) {
+  const columns = table.columns && table.columns.map(columnParameters.get).join('\n');
   return `  await knex.schema
     .createTable('${table.name}', (t) => {
       t.string('id').primary();
       t.dateTime('createdAt').notNullable().defaultTo(knex.fn.now());
       t.dateTime('updatedAt').notNullable().defaultTo(knex.fn.now());
+      ${columns || ''}
     });
 `
 }
