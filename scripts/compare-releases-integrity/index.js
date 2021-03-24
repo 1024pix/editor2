@@ -13,13 +13,12 @@ module.exports = {
 
 async function main() {
   const baseUrl1 = process.env.URL1;
-  const baseUrl2 = process.env.URL2;
+  const file2 = process.env.FILE2;
   const token1 = process.env.TOKEN1;
-  const token2 = process.env.TOKEN2;
 
   const differences = await compareReleases(
     { url: baseUrl1, token: token1 },
-    { url: baseUrl2, token: token2 },
+    { file: file2 },
     remoteChecksumComputer
   );
 
@@ -41,9 +40,9 @@ function replaceAttachmentsWithProgress(challenges, remoteChecksumComputer) {
   }));
 }
 
-async function compareReleases({ url: url1, token: token1 }, { url: url2, token: token2 }, remoteChecksumComputer) {
+async function compareReleases({ url: url1, token: token1 }, { file: file2 }, remoteChecksumComputer) {
   const challenges1 = await getRelease(url1, token1);
-  const challenges2 = await getRelease(url2, token2);
+  const challenges2 = await getReleaseFile(file2);
 
   const newChallenges1 = await replaceAttachmentsWithProgress(challenges1, remoteChecksumComputer);
   const newChallenges2 = await replaceAttachmentsWithProgress(challenges2, remoteChecksumComputer);
@@ -64,6 +63,11 @@ async function getRelease(url, token) {
   const { data: { content: { challenges } } } = await axios.get(`${url}/api/releases/latest`, {
     headers: { 'Authorization': 'Bearer '+ token }
   });
+  return challenges;
+}
+
+async function getReleaseFile(file) {
+  const { content: { challenges } } = require(file);
   return challenges;
 }
 
