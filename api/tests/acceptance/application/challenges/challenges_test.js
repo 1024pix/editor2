@@ -7,13 +7,8 @@ describe('Acceptance | Controller | challenges-controller', () => {
   describe('GET /challenges', () => {
     let user;
     beforeEach(async function() {
-      nock.disableNetConnect();
-      user = databaseBuilder.factory.buildUser({ name: 'User', trigram: 'ABC', access: 'admin', apiKey: '11b2cab8-050e-4165-8064-29a1e58d8997' });
+      user = databaseBuilder.factory.buildAdminUser();
       await databaseBuilder.commit();
-    });
-
-    afterEach(function() {
-      nock.cleanAll();
     });
 
     it('should return challenges', async () => {
