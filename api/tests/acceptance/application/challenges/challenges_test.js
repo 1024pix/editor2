@@ -422,6 +422,7 @@ describe('Acceptance | Controller | challenges-controller', () => {
       delete airtableChallengeBody.fields['Compétences (via tube) (id persistant)'];
       delete airtableChallengeBody.fields['Acquix (id persistant)'];
       delete airtableChallengeBody.fields['Scoring'];
+      delete airtableChallengeBody.id;
       return airtableChallengeBody;
     }
 
@@ -439,13 +440,61 @@ describe('Acceptance | Controller | challenges-controller', () => {
         );
       const server = await createServer();
 
-      // When
+      // when
       const response = await server.inject({
         method: 'POST',
         url: '/api/challenges',
         headers: generateAuthorizationHeader(user),
-        // TODO: send a challenge serialized to JSONAPI
-        payload: challenge,
+        payload: {
+          data: {
+            type: 'challenges',
+            id: challenge.id,
+            attributes: {
+              'airtable-id': challenge.airtableId,
+              instruction: challenge.instruction,
+              'alternative-instruction': challenge.alternativeInstruction,
+              type: challenge.type,
+              format: challenge.format,
+              proposals: challenge.proposals,
+              solution: challenge.solution,
+              'solution-to-display': challenge.solutionToDisplay,
+              't1-status': challenge.t1Status,
+              't2-status': challenge.t2Status,
+              't3-status': challenge.t3Status,
+              pedagogy: challenge.pedagogy,
+              author: challenge.author,
+              declinable: challenge.declinable,
+              version: challenge.version,
+              genealogy: challenge.genealogy,
+              status: challenge.status,
+              preview: challenge.preview,
+              scoring: challenge.scoring,
+              timer: challenge.timer,
+              'embed-url': challenge.embedUrl,
+              'embed-title': challenge.embedTitle,
+              'embed-height': challenge.embedHeight,
+              'alternative-version': challenge.alternativeVersion,
+              accessibility1: challenge.accessibility1,
+              accessibility2: challenge.accessibility2,
+              spoil: challenge.spoil,
+              responsive: challenge.responsive,
+              locales: challenge.locales,
+              area: challenge.area,
+              'auto-reply': challenge.autoReply,
+              focusable: challenge.focusable,
+            },
+            relationships: {
+              skills: {
+                data: challenge.skills.map((skill) => {
+                  return {
+                    type: 'skills',
+                    id: skill,
+                  };
+                }),
+              },
+            },
+          },
+        },
       });
 
       // Then
