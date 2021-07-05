@@ -47,6 +47,20 @@ describe('Unit | Infrastructure | Datasource | Airtable | ChallengeDatasource', 
       // then
       expect(challenge.competenceId).to.be.undefined;
     });
+
+    it('should convert Airtable t1, t2, t3 status to boolean', () => {
+      // given
+      const airtableChallenge = airtableBuilder.factory.buildChallenge({ t1Status: true, t2Status: false, t3Status: true });
+      const challengeRecord = new AirtableRecord('Epreuves', airtableChallenge.id, airtableChallenge);
+
+      // when
+      const challenge = challengeDatasource.fromAirTableObject(challengeRecord);
+
+      // then
+      expect(challenge.t1Status).to.be.true;
+      expect(challenge.t2Status).to.be.false;
+      expect(challenge.t3Status).to.be.true;
+    });
   });
 
   describe('#toAirTableObject', () => {

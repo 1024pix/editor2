@@ -66,9 +66,9 @@ module.exports = datasource.extend({
       type: airtableRecord.get('Type d\'épreuve'),
       solution: airtableRecord.get('Bonnes réponses'),
       solutionToDisplay: airtableRecord.get('Bonnes réponses à afficher'),
-      t1Status: airtableRecord.get('T1 - Espaces, casse & accents'),
-      t2Status: airtableRecord.get('T2 - Ponctuation'),
-      t3Status: airtableRecord.get('T3 - Distance d\'édition'),
+      t1Status: _convertAirtableValueToBoolean(airtableRecord.get('T1 - Espaces, casse & accents')),
+      t2Status: _convertAirtableValueToBoolean(airtableRecord.get('T2 - Ponctuation')),
+      t3Status: _convertAirtableValueToBoolean(airtableRecord.get('T3 - Distance d\'édition')),
       scoring: airtableRecord.get('Scoring'),
       status: airtableRecord.get('Statut'),
       skills: airtableRecord.get('Acquix') || [],
@@ -108,9 +108,9 @@ module.exports = datasource.extend({
         'Type d\'épreuve': model.type,
         'Bonnes réponses': model.solution,
         'Bonnes réponses à afficher': model.solutionToDisplay,
-        'T1 - Espaces, casse & accents': _convertBooleanToAirtableValues(model.t1Status),
-        'T2 - Ponctuation': _convertBooleanToAirtableValues(model.t2Status),
-        'T3 - Distance d\'édition': _convertBooleanToAirtableValues(model.t3Status),
+        'T1 - Espaces, casse & accents': _convertBooleanToAirtableValue(model.t1Status),
+        'T2 - Ponctuation': _convertBooleanToAirtableValue(model.t2Status),
+        'T3 - Distance d\'édition': _convertBooleanToAirtableValue(model.t3Status),
         'Statut': model.status,
         'Embed URL': model.embedUrl,
         'Embed title': model.embedTitle,
@@ -146,11 +146,15 @@ module.exports = datasource.extend({
   }
 });
 
-function _convertBooleanToAirtableValues(field) {
-  if (field) {
+function _convertBooleanToAirtableValue(value) {
+  if (value) {
     return 'Activé';
   }
   return 'Désactivé';
+}
+
+function _convertAirtableValueToBoolean(value) {
+  return value === 'Activé';
 }
 
 function _convertLanguagesToLocales(languages) {
