@@ -108,9 +108,9 @@ module.exports = datasource.extend({
         'Type d\'épreuve': model.type,
         'Bonnes réponses': model.solution,
         'Bonnes réponses à afficher': model.solutionToDisplay,
-        'T1 - Espaces, casse & accents': model.t1Status,
-        'T2 - Ponctuation': model.t2Status,
-        'T3 - Distance d\'édition': model.t3Status,
+        'T1 - Espaces, casse & accents': _convertBooleanToAirtableValues(model.t1Status),
+        'T2 - Ponctuation': _convertBooleanToAirtableValues(model.t2Status),
+        'T3 - Distance d\'édition': _convertBooleanToAirtableValues(model.t3Status),
         'Statut': model.status,
         'Embed URL': model.embedUrl,
         'Embed title': model.embedTitle,
@@ -145,6 +145,13 @@ module.exports = datasource.extend({
     return this.fromAirTableObject(airtableRawObjects[0]);
   }
 });
+
+function _convertBooleanToAirtableValues(field) {
+  if (field) {
+    return 'Activé';
+  }
+  return 'Désactivé';
+}
 
 function _convertLanguagesToLocales(languages) {
   return languages.map((language) => _convertLanguageToLocale(language));

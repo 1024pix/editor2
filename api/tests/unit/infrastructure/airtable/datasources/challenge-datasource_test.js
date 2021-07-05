@@ -72,6 +72,19 @@ describe('Unit | Infrastructure | Datasource | Airtable | ChallengeDatasource', 
       // then
       expect(challenge).to.deep.equal(airtableChallenge);
     });
+
+    it('should transform boolean to `activer/désactiver` for t1, t2 and t3',() => {
+      // given
+      const createdChallenge = domainBuilder.buildChallenge({ t1Status: true, t2Status: false, t3Status: null });
+
+      // when
+      const challenge = challengeDatasource.toAirTableObject(createdChallenge);
+
+      // then
+      expect(challenge.fields['T1 - Espaces, casse & accents']).to.equal('Activé');
+      expect(challenge.fields['T2 - Ponctuation']).to.equal('Désactivé');
+      expect(challenge.fields['T3 - Distance d\'édition']).to.equal('Désactivé');
+    });
   });
 
   describe('#filterById', () => {
