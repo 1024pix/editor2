@@ -1,6 +1,7 @@
 const nock = require('nock');
 const { expect, databaseBuilder, domainBuilder, generateAuthorizationHeader, airtableBuilder } = require('../../../test-helper');
 const createServer = require('../../../../server');
+const { serialize } = require('../../../../lib/infrastructure/serializers/jsonapi/challenge-serializer');
 
 describe('Acceptance | Controller | challenges-controller', () => {
 
@@ -555,118 +556,43 @@ describe('Acceptance | Controller | challenges-controller', () => {
     it('should update a challenge', async () => {
       // Given
       const challenge = domainBuilder.buildChallenge({ id: 'challengeId' });
-      const airtableChallenge = airtableBuilder.factory.buildChallenge(challenge);
-      const expectedBodyChallenge = _removeReadonlyFields(airtableChallenge);
+      const expectedBodyChallenge = _removeReadonlyFields(airtableBuilder.factory.buildChallenge(challenge));
       const expectedBody = { records: [expectedBodyChallenge] };
 
       const airtableCall = nock('https://api.airtable.com')
         .patch('/v0/airtableBaseValue/Epreuves/?', expectedBody)
         .reply(
           200,
-          { records: [airtableChallenge] }
+          { records: [airtableBuilder.factory.buildChallenge(challenge)] }
         );
       const server = await createServer();
+
+      // instead of mapping object by hand, use serializer ?
+      const expectedResult = serialize(challenge);
+      const payload = serialize(challenge);
+      payload.data.relationships = {
+        skills: {
+          data: challenge.skills.map((skill) => {
+            return {
+              type: 'skills',
+              id: skill,
+            };
+          }),
+        },
+      };
 
       // When
       const response = await server.inject({
         method: 'PATCH',
         url: '/api/challenges/{id}',
         headers: generateAuthorizationHeader(user),
-        payload: {
-          data: {
-            type: 'challenges',
-            id: challenge.id,
-            attributes: {
-              'airtable-id': challenge.airtableId,
-              instruction: challenge.instruction,
-              'alternative-instruction': challenge.alternativeInstruction,
-              type: challenge.type,
-              format: challenge.format,
-              proposals: challenge.proposals,
-              solution: challenge.solution,
-              'solution-to-display': challenge.solutionToDisplay,
-              't1-status': challenge.t1Status,
-              't2-status': challenge.t2Status,
-              't3-status': challenge.t3Status,
-              pedagogy: challenge.pedagogy,
-              author: challenge.author,
-              declinable: challenge.declinable,
-              version: challenge.version,
-              genealogy: challenge.genealogy,
-              status: challenge.status,
-              preview: challenge.preview,
-              scoring: challenge.scoring,
-              timer: challenge.timer,
-              'embed-url': challenge.embedUrl,
-              'embed-title': challenge.embedTitle,
-              'embed-height': challenge.embedHeight,
-              'alternative-version': challenge.alternativeVersion,
-              accessibility1: challenge.accessibility1,
-              accessibility2: challenge.accessibility2,
-              spoil: challenge.spoil,
-              responsive: challenge.responsive,
-              locales: challenge.locales,
-              area: challenge.area,
-              'auto-reply': challenge.autoReply,
-              focusable: challenge.focusable,
-            },
-            relationships: {
-              skills: {
-                data: challenge.skills.map((skill) => {
-                  return {
-                    type: 'skills',
-                    id: skill,
-                  };
-                }),
-              },
-            },
-          },
-        },
+        payload,
       });
 
       // Then
       expect(airtableCall.isDone()).to.be.true;
       expect(response.statusCode).to.equal(201);
-      expect(response.result).to.deep.equal({
-        data: {
-          type: 'challenges',
-          id: 'challengeId',
-          attributes: {
-            'airtable-id': challenge.airtableId,
-            instruction: 'Les moteurs de recherche affichent certains liens en raison d\'un accord commercial.\n\nDans quels encadrés se trouvent ces liens ?',
-            'alternative-instruction': '',
-            type: 'QCM',
-            format: 'mots',
-            proposals: '- 1\n- 2\n- 3\n- 4\n- 5',
-            solution: '1, 5',
-            'solution-to-display': '1',
-            't1-status': true,
-            't2-status': false,
-            't3-status': true,
-            pedagogy: 'q-situation',
-            author: ['SPS'],
-            declinable: 'facilement',
-            version: 1,
-            genealogy: 'Prototype 1',
-            status: 'validé',
-            preview: 'http://staging.pix.fr/challenges/recwWzTquPlvIl4So/preview',
-            scoring: '1: @outilsTexte2\n2: @outilsTexte4',
-            timer: 1234,
-            'embed-url': 'https://github.io/page/epreuve.html',
-            'embed-title': 'Epreuve de selection de dossier',
-            'embed-height': 500,
-            'alternative-version': 2,
-            accessibility1: 'OK',
-            accessibility2: 'RAS',
-            spoil: 'Non Sp',
-            responsive:  'non',
-            locales: [],
-            area: 'France',
-            'auto-reply': false,
-            focusable: false,
-          }
-        },
-      });
+      expect(response.result).to.deep.equal(expectedResult);
     });
   });
 });
