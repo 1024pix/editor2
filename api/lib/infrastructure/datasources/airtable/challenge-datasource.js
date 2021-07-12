@@ -136,8 +136,8 @@ module.exports = datasource.extend({
         'Géographie': model.area,
       }
     };
-    if (model['airtableId']) {
-      body.id = model['airtableId'];
+    if (model.airtableId) {
+      body.id = model.airtableId;
     }
     return body;
   },
