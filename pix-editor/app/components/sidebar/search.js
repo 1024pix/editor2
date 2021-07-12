@@ -42,7 +42,8 @@ export default class SidebarSearchComponent extends Component {
       this.routeModel = 'challenge';
       return this.store.query('challenge', {
         filter: {
-          filterByFormula: `AND(FIND('${query.toLowerCase().replace(/'/g, '\\\'')}', LOWER(CONCATENATE(Consigne,Propositions,{Embed URL}))) , Statut != 'archive')`,
+          search: query.toLowerCase(),
+//          filterByFormula: `AND(FIND('${query.toLowerCase().replace(/'/g, '\\\'')}', LOWER(CONCATENATE(Consigne,Propositions,{Embed URL}))) , Statut != 'archive')`,
         },
         page: {
           size: 20,

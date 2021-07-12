@@ -142,6 +142,14 @@ module.exports = datasource.extend({
     return body;
   },
 
+  async search(query) {
+    const airtableRawObjects = await airtable.findRecords(this.tableName, {
+      fields: this.usedFields,
+      filterByFormula : `AND(FIND('${_espaceQuery(query)}', LOWER(CONCATENATE(Consigne,Propositions,{Embed URL}))) , Statut != 'archive')`
+    });
+    return airtableRawObjects.map(this.fromAirTableObject);
+  },
+
   async filterById(id) {
     const airtableRawObjects = await airtable.findRecords(this.tableName, {
       filterByFormula : `{id persistant} = '${id}'`,
@@ -150,6 +158,10 @@ module.exports = datasource.extend({
     return this.fromAirTableObject(airtableRawObjects[0]);
   }
 });
+
+function _espaceQuery(value) {
+  return value.replace(/'/g, '\\\'');
+}
 
 function _convertBooleanToAirtableValue(value) {
   if (value) {
