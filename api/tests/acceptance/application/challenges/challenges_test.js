@@ -567,7 +567,6 @@ describe('Acceptance | Controller | challenges-controller', () => {
         );
       const server = await createServer();
 
-      // instead of mapping object by hand, use serializer ?
       const expectedResult = serialize(challenge);
       const payload = serialize(challenge);
       payload.data.relationships = {
