@@ -453,7 +453,6 @@ describe('Acceptance | Controller | challenges-controller', () => {
             type: 'challenges',
             id: challenge.id,
             attributes: {
-              // 'airtable-id': challenge.airtableId,
               instruction: challenge.instruction,
               'alternative-instruction': challenge.alternativeInstruction,
               type: challenge.type,
