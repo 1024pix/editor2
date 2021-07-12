@@ -591,7 +591,7 @@ describe('Acceptance | Controller | challenges-controller', () => {
 
       // Then
       expect(airtableCall.isDone()).to.be.true;
-      expect(response.statusCode).to.equal(201);
+      expect(response.statusCode).to.equal(200);
       expect(response.result).to.deep.equal(expectedResult);
     });
   });

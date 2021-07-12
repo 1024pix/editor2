@@ -49,7 +49,7 @@ exports.register = async function(server) {
         handler: async function(request, h) {
           const challenge = await challengeSerializer.deserialize(request.payload);
           const updatedChallenge = await challengeRepository.update(challenge);
-          return h.response(challengeSerializer.serialize(updatedChallenge)).created();
+          return h.response(challengeSerializer.serialize(updatedChallenge));
         },
       },
     },
