@@ -11,6 +11,28 @@ const _DatasourcePrototype = {
     return airtableRawObjects.map(this.fromAirTableObject);
   },
 
+  async filter({ ids }) {
+    const airtableRawObjects = await airtable.findRecords(
+      this.tableName,
+      {
+        fields: this.usedFields,
+        filterByFormula: 'OR(' + ids.map((id) => `'${id}' = {id persistant}`).join(',') + ')'
+      },
+    );
+    return airtableRawObjects.map(this.fromAirTableObject);
+  },
+
+  async create(model) {
+    const airtableRequestBody = this.toAirTableObject(model);
+    const airtableRawObject = await airtable.createRecord(this.tableName, airtableRequestBody);
+    return this.fromAirTableObject(airtableRawObject);
+  },
+
+  async update(model) {
+    const airtableRequestBody = this.toAirTableObject(model);
+    const airtableRawObject = await airtable.updateRecord(this.tableName, airtableRequestBody);
+    return this.fromAirTableObject(airtableRawObject);
+  },
 };
 
 module.exports = {
